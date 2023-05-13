@@ -14,11 +14,16 @@ const signUp = async (req, res) => {
       return res.status(409).json({ message: 'Username is already taken' });
     }
 
-    // Check if user is SuperAdmin
+    // Check if the userType is valid
+    if (userType !== 'STUDENT' && userType !== 'TEACHER' && userType !== 'ADMIN') {
+      return res.status(400).json({ message: 'Invalid userType' });
+    }
+
+    // Check if the user is SUPER_ADMIN
     if (req.user.userType === 'SUPER_ADMIN') {
-      // Check if the userType is ADMIN
-      if (userType === 'ADMIN') {
-        // Create a new Admin user
+      // Check if the inserted userType is ADMIN
+      if (userType === 'admin') {
+        // Create a new ADMIN user
         const user = new User({ username, password, userType });
         await user.save();
 
@@ -34,14 +39,27 @@ const signUp = async (req, res) => {
       } else {
         return res.status(400).json({ message: 'Only SUPER_ADMIN can create an ADMIN user' });
       }
-    } else {
-      return res.status(401).json({ message: 'Access denied. Only SUPER_ADMIN can create users' });
     }
+
+    // Create a new student or teacher user
+    const user = new User({ username, password, userType });
+    await user.save();
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, username: user.username, userType: user.userType },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Return Results
+    return res.status(201).json({ message: 'User was successfully created', userType: user.userType, token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
 
 
 

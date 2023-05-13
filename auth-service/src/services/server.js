@@ -26,5 +26,14 @@ app.get('/generate-key', (req, res) => {
 connectDB(process.env.MONGODB_URI, process.env.PORT, app);
 
 
+const generateToken = require('../test/tokenGenerator');
+
+// Call the generateToken function
+const token = generateToken();
+
+// Print the generated token
+console.log('Generated Token:', token);
+
+
 
 
