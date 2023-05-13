@@ -28,11 +28,7 @@ const signUp = async (req, res) => {
         await user.save();
 
         // Generate JWT token
-        const token = jwt.sign(
-          { userId: user._id, username: user.username, userType: user.userType },
-          process.env.ACCESS_TOKEN_SECRET,
-          { expiresIn: '1h' }
-        );
+        const token = generateToken(user);
 
         // Return Results
         return res.status(201).json({ message: 'User was successfully created', userType: user.userType, token });
@@ -46,11 +42,8 @@ const signUp = async (req, res) => {
     await user.save();
 
     // Generate JWT token
-    const token = jwt.sign(
-      { userId: user._id, username: user.username, userType: user.userType },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = generateToken(user);
+
 
     // Return Results
     return res.status(201).json({ message: 'User was successfully created', userType: user.userType, token });
@@ -97,11 +90,8 @@ const login = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign(
-      { userId: user._id, username: user.username, userType: user.userType },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = generateToken(user);
+
 
     res.json({ message: 'Login successful', userType: user.userType, token });
   } catch (error) {
@@ -109,6 +99,17 @@ const login = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+
+// Function to generate JWT token
+const generateToken = (user) => {
+  return jwt.sign(
+    { userId: user._id, username: user.username, userType: user.userType },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: '1h' }
+  );
+};
+
 
 module.exports = { signUp, login };
 
