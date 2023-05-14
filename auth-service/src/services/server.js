@@ -24,12 +24,16 @@ app.get('/generate-key', (req, res) => {
 
 // Connecting to MongoDB
 connectDB(process.env.MONGODB_URI, process.env.PORT, app);
-
+const user = {
+  _id: 'user_id',
+  username: 'username',
+  userType: 'userType'
+};
 
 const generateToken = require('../test/tokenGenerator');
 
 // Call the generateToken function
-const token = generateToken();
+const token = generateToken(user);
 
 // Print the generated token
 console.log('Generated Token:', token);
