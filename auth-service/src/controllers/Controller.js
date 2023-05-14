@@ -3,6 +3,20 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const verifyToken = (req, res) => {
+  const token = req.body.token;
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
+    const user = User.findOne({ _id: decoded.id });
+    res.send(user);
+  });
+};
+
+
+
+
 // SignUp Function
 const signUp = async (req, res) => {
   try {
@@ -111,6 +125,6 @@ const generateToken = (user) => {
 };
 
 
-module.exports = { signUp, login };
+module.exports = { signUp, login, verifyToken };
 
 

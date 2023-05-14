@@ -2,7 +2,6 @@
 const { Question } = require('../models/Questions');
 const { isTeacher, isAdmin, isNotStudent } = require('../middlewares/authMiddleware');
 
-
 // Handling Errors
 function handleError(error) {
   console.error(error);
@@ -15,8 +14,10 @@ function handleError(error) {
 // Create new question
 exports.createQuestion = async (req, res) => {
   try {
-    // Getting Questions from Body
+    // Getting question data from the request body
     const { name, category, subcategory, mark, expectedTime, correctAnswers, answers } = req.body;
+
+    // Create a new question
     const question = new Question({
       name,
       category,
@@ -28,21 +29,18 @@ exports.createQuestion = async (req, res) => {
       createdBy: req.user.userId
     });
 
-    // Saving Question
+    // Save the question to the database
     await question.save();
 
-    // Return Results
+    // Return the success response
     res.status(201).json({
-      message: "Question was Created Successfully."
+      message: 'Question created successfully.',
+      question
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "An error occurred while creating the question."
-    });
+    handleError(res, error);
   }
 };
-
 
 // Get question by ID
 exports.getQuestionById = async (req, res) => {

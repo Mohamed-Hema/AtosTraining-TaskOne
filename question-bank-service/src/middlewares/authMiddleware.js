@@ -1,3 +1,37 @@
+const axios = require('axios');
+
+const authMiddleware = async (req, res, next) => {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+      if (!token) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+  
+      // Verify token by calling the auth-service endpoint
+      const response = await axios.post('http://auth-service-host:auth-service-port/verify-token', { token });
+  
+      // Check if verification failed
+      if (response.status !== 200 || !response.data.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+  
+      // Attach user information to the request object
+      req.user = response.data.user;
+  
+      next();
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+
+
+
+
+
+
+
+
 // Checking if user is TEACHER
 const isTeacher = (req, res, next) => {
     if (req.user && req.user.userType === 'TEACHER') {
@@ -29,5 +63,5 @@ const isTeacher = (req, res, next) => {
     }
   };
   
-  module.exports = { isTeacher, isAdmin, isNotStudent };
-  
+  module.exports = { authMiddleware, isTeacher, isAdmin, isNotStudent };
+
