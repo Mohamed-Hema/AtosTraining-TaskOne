@@ -11,7 +11,6 @@ function handleError(res, error) {
 }
 
 
-
 // Create new question
 exports.createQuestion = async (req, res) => {
   try {
