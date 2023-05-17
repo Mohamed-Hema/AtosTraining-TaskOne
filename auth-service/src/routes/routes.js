@@ -27,7 +27,7 @@ router.get('/questions', async (req, res) => {
   try {
     // Make a request to the question-bank-service questions endpoint
     const response = await questionBankService.get('/questions', { params: req.query });
-    // Process the response and return the result
+    // Return Results
     res.json(response.data);
   } catch (error) {
     // Handle errors

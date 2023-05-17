@@ -2,7 +2,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const axios = require('axios');
 
+// Function to verify token
 const verifyToken = (req, res) => {
   const token = req.body.token;
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
@@ -13,9 +15,6 @@ const verifyToken = (req, res) => {
     res.send(user);
   });
 };
-
-
-
 
 // SignUp Function
 const signUp = async (req, res) => {
@@ -58,7 +57,6 @@ const signUp = async (req, res) => {
     // Generate JWT token
     const token = generateToken(user);
 
-
     // Return Results
     return res.status(201).json({ message: 'User was successfully created', userType: user.userType, token });
   } catch (error) {
@@ -66,10 +64,6 @@ const signUp = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-
-
-
-
 
 // Login Function
 const login = async (req, res) => {
@@ -96,6 +90,7 @@ const login = async (req, res) => {
         return res.status(401).json({ message: 'Invalid password' });
       }
     }
+
     // Handling Normal Users
     // Check Password
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
@@ -106,6 +101,15 @@ const login = async (req, res) => {
     // Generate JWT token
     const token = generateToken(user);
 
+    // Send a POST request to the login endpoint of the client app
+    const response = await axios.post('http://localhost:3000/api/login', {
+      username,
+      userType: user.userType,
+      token,
+    });
+
+    // Handle the response and any necessary actions
+    console.log(response.data); // You can display a success message or redirect to another page
 
     res.json({ message: 'Login successful', userType: user.userType, token });
   } catch (error) {
@@ -113,7 +117,6 @@ const login = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-
 
 // Function to generate JWT token
 const generateToken = (user) => {
@@ -124,7 +127,4 @@ const generateToken = (user) => {
   );
 };
 
-
 module.exports = { signUp, login, verifyToken };
-
-

@@ -23,7 +23,10 @@ const App = () => {
           path="/questionbank"
           element={<QuestionBankPage isAuthenticated={isAuthenticated} />}
         />
-        <Route path="/profile" element={<UserProfilePage />} />
+        <Route
+          path="/profile"
+          element={<UserProfilePage isAuthenticated={isAuthenticated} />}
+        />
       </Routes>
       <Footer />
     </Router>

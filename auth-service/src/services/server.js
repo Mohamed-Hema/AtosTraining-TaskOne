@@ -37,7 +37,3 @@ const token = generateToken(user);
 
 // Print the generated token
 console.log('Generated Token:', token);
-
-
-
-
