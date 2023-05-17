@@ -4,6 +4,8 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import QuestionBankPage from './pages/QuestionBankPage';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import UserProfilePage from './pages/UserProfilePage';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,7 +23,9 @@ const App = () => {
           path="/questionbank"
           element={<QuestionBankPage isAuthenticated={isAuthenticated} />}
         />
+        <Route path="/profile" element={<UserProfilePage />} />
       </Routes>
+      <Footer />
     </Router>
   );
 };

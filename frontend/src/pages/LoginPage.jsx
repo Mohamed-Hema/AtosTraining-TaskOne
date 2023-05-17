@@ -54,7 +54,7 @@ const LoginPage = () => {
 
               <div>
                 <p className='mb-0'>
-                  Don&apos;t have an account? <a href='#!' className='text-white-50 fw-bold'>Sign Up</a>
+                  Don&apos;t have an account? <a href='/signup' className='text-white-50 fw-bold'>Sign Up</a>
                 </p>
               </div>
             </MDBCardBody>

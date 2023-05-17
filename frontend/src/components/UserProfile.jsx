@@ -1,11 +1,27 @@
-import React from 'react'
+import React from 'react';
+import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody } from 'mdb-react-ui-kit';
 
-const UserProfile = () => {
+const UserProfile = ({ user }) => {
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <MDBContainer>
+      <MDBRow className='justify-content-center'>
+        <MDBCol md='6'>
+          <MDBCard>
+            <MDBCardBody>
+              <h5 className='fw-bold mb-4'>User Profile</h5>
+              <p>
+                <strong>Name:</strong> {user.name}
+              </p>
+              <p>
+                <strong>Email:</strong> {user.email}
+              </p>
+              {/* Add more user data fields as needed */}
+            </MDBCardBody>
+          </MDBCard>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
+  );
+};
 
-export default UserProfile
+export default UserProfile;

@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const Navbar = ({ isAuthenticated }) => {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
+
   const renderAuthButtons = () => {
     if (isAuthenticated) {
       return (
@@ -9,7 +13,7 @@ const Navbar = ({ isAuthenticated }) => {
           Logout
         </button>
       );
-    } else {
+    } else if (!isLoginPage) {
       return (
         <>
           <Link to="/login" className="btn btn-outline-light me-2">
@@ -28,7 +32,7 @@ const Navbar = ({ isAuthenticated }) => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark container-fluid">
       <div className="container">
         <Link className="navbar-brand" to="/">
           Quiz Bank
