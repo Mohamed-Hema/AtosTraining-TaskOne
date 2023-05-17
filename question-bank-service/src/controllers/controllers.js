@@ -3,12 +3,13 @@ const { Question } = require('../models/Questions');
 const { isTeacher, isAdmin, isNotStudent } = require('../middlewares/authMiddleware');
 
 // Handling Errors
-function handleError(error) {
+function handleError(res, error) {
   console.error(error);
   res.status(500).json({
     message: "Internal Server Error"
-  })
+  });
 }
+
 
 
 // Create new question
@@ -39,7 +40,7 @@ exports.createQuestion = async (req, res) => {
     });
   } catch (error) {
     handleError(res, error);
-  }
+  }  
 };
 
 // Get question by ID
@@ -58,7 +59,7 @@ exports.getQuestionById = async (req, res) => {
     res.json({question});
     //Catching Errors
   }catch(error) {
-    handleError(error);
+    handleError(res, error);
   }
 };
 
@@ -123,7 +124,7 @@ exports.updateQuestion = (req, res) => {
 
   // Catching Errors
   } catch (error) {
-    handleError(error);
+    handleError(res, error);
   }
 };
 
@@ -160,7 +161,7 @@ exports.addAnswer = async (req, res) => {
 
     // Catching errors
   } catch (error) {
-    handleError(error);
+    handleError(res, error);
   }
 };
 
@@ -204,7 +205,7 @@ exports.deleteAnswer = async (req, res) => {
     });
     // Catching errors
   } catch (error) {
-    handleError(error);
+    handleError(res, error);
   }
 };
 
@@ -239,6 +240,6 @@ exports.deleteQuestion = async (req, res) => {
     });
     // Catching errors
   } catch (error) {
-    handleError(error);
+    handleError(res, error);
   }
 };

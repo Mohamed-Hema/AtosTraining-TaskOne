@@ -1,36 +1,37 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+require('dotenv').config();
+
 
 const SignupForm = () => {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     if (password !== confirmPassword) {
-      console.error("Passwords do not match");
+      console.error('Passwords do not match');
       return;
     }
-  
+
     try {
       // Make a POST request to the signup endpoint of the auth-service
-      const response = await axios.post('http://localhost:5000/api/signup/', {
+      const response = await axios.post(`http://localhost:${process.env.PORT}/api/signup`, {
         username,
-        password
+        password,
       });
-  
+
       // Handle the response and any necessary actions
       console.log(response.data); // You can display a success message or redirect to another page
-  
+
       // Check the user type
       const { userType } = response.data;
       if (userType === 'STUDENT') {
         // Display a welcome message for students
         console.log('Welcome, student!');
       }
-  
     } catch (error) {
       // Handle error
       if (error.response && error.response.data) {
@@ -40,7 +41,6 @@ const SignupForm = () => {
       }
     }
   };
-  
 
   return (
     <div className="form">
@@ -50,12 +50,17 @@ const SignupForm = () => {
           <input type="text" name="username" required onChange={(e) => setUsername(e.target.value)} />
         </div>
         <div className="input-container">
-          <label>Email</label>
-          <input type="email" name="email" required onChange={(e) => setEmail(e.target.value)} />
-        </div>
-        <div className="input-container">
           <label>Password</label>
           <input type="password" name="password" required onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <div className="input-container">
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            required
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
         </div>
         <div className="button-container">
           <input type="submit" value="Sign Up" />

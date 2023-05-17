@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const QuestionsSchema = new mongoose.Schema({
   name: {
     type: String,
-    unique: true,
     required: true
   },
   category: {
@@ -14,8 +13,7 @@ const QuestionsSchema = new mongoose.Schema({
     required: true
   },
   subcategory: {
-    type: String,
-    unique: true
+    type: String
   },
   mark: {
     type: Number,
@@ -23,8 +21,7 @@ const QuestionsSchema = new mongoose.Schema({
     required: true
   },
   expectedTime: {
-    type: Number,
-    unique: true
+    type: Number
   },
   correctAnswers: {
     type: [
@@ -47,12 +44,10 @@ const QuestionsSchema = new mongoose.Schema({
     type: [
       { 
         id: {
-          type: Number,
-          unique: true
+          type: Number
         },
         name: {
-          type: String,
-          unique: true
+          type: String
         },
         description: {
           type: String

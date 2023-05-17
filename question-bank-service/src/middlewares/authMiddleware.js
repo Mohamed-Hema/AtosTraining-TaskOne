@@ -8,7 +8,7 @@ const authMiddleware = async (req, res, next) => {
       }
   
       // Verify token by calling the auth-service endpoint
-      const response = await axios.post('http://auth-service-host:auth-service-port/verify-token', { token });
+      const response = await axios.post(`${VERIFY_TOKEN_AUTH_SERICE}`, { token });
   
       // Check if verification failed
       if (response.status !== 200 || !response.data.user) {
@@ -24,13 +24,6 @@ const authMiddleware = async (req, res, next) => {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   };
-
-
-
-
-
-
-
 
 // Checking if user is TEACHER
 const isTeacher = (req, res, next) => {

@@ -102,7 +102,7 @@ const login = async (req, res) => {
     const token = generateToken(user);
 
     // Send a POST request to the login endpoint of the client app
-    const response = await axios.post('http://localhost:3000/api/login', {
+    const response = await axios.post(`http://localhost:${process.env.PORT}/api/login`, {
       username,
       userType: user.userType,
       token,
