@@ -1,8 +1,7 @@
 // Global Requirements
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const axios = require('axios');
+const { User } = require("../models/User");
 
 // Function to verify token
 const verifyToken = (req, res) => {
@@ -33,7 +32,7 @@ const signUp = async (req, res) => {
     }
 
     // Check if the user is SUPER_ADMIN
-    if (req.user.userType === 'SUPER_ADMIN') {
+    if (req.userType === 'SUPER_ADMIN') {
       // Check if the inserted userType is ADMIN
       if (userType === 'admin') {
         // Create a new ADMIN user
@@ -64,11 +63,15 @@ const signUp = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-
 // Login Function
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
+
+    // Validate the request body
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Invalid request body' });
+    }
 
     // Check if the user exists
     const user = await User.findOne({ username });
@@ -78,7 +81,8 @@ const login = async (req, res) => {
 
     // Check if the user is the superadmin
     if (user.userType === 'SUPER_ADMIN') {
-      if (password === user.password) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (isPasswordValid) {
         // Generate JWT token
         const token = jwt.sign(
           { userId: user._id, username: user.username, userType: user.userType },
@@ -101,16 +105,6 @@ const login = async (req, res) => {
     // Generate JWT token
     const token = generateToken(user);
 
-    // Send a POST request to the login endpoint of the client app
-    const response = await axios.post(`http://localhost:${process.env.PORT}/api/login`, {
-      username,
-      userType: user.userType,
-      token,
-    });
-
-    // Handle the response and any necessary actions
-    console.log(response.data); // You can display a success message or redirect to another page
-
     res.json({ message: 'Login successful', userType: user.userType, token });
   } catch (error) {
     console.error(error);
@@ -127,4 +121,4 @@ const generateToken = (user) => {
   );
 };
 
-module.exports = { signUp, login, verifyToken };
+module.exports = { signUp, login };

@@ -23,6 +23,7 @@ router.get('/questions', authMiddleware, getAllQuestions);
 // Create new question
 router.post('/questions', authMiddleware, isTeacher, createQuestion);
 
+
 // Get question by ID
 router.get('/questions/:questionId', getQuestionById);
 

@@ -51,7 +51,6 @@ const LoginPage = ({ setIsAuthenticated }) => {
               <p className='text-white-50 mb-5'>Please enter your login and password!</p>
 
              
-
               <MDBInput
                 wrapperClass='mb-4 mx-5 w-100'
                 labelClass='text-white'

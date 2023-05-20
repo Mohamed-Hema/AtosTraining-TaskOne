@@ -41,7 +41,7 @@ const createSuperAdmin = async () => {
       await superadmin.save();
       console.log('Superadmin user created successfully');
     } else {
-      console.log('Superadmin user already exists');
+      // console.log('Superadmin user already exists');
     }
   } catch (error) {
     console.error('Error creating superadmin user:', error);
