@@ -1,43 +1,88 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { MDBCard, MDBCardBody, MDBInput, MDBBtn } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../servers/authApi';
 
-const LoginPage = ({ setIsAuthenticated }) => {
+
+const LoginPage = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState("");
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+
+  //   try {
+  //     // Make a POST request to the login endpoint of the auth-service
+  //     // const response = await axios.post('http://localhost:5000/api/login', {
+  //     //   username,
+  //     //   password
+  //     // });
+  //     try {
+  //       const response = await axios.post('http://localhost:5000/api/login', {
+  //         username,
+  //         password
+  //       });
+  //       console.log(response.data); 
+
+  //       // handle response here
+  //     } catch (error) {
+  //       // handle error here
+  //       console.error(error);
+  //     }
+      
+
+  //     // Get Response
+  //     // console.log(response.data); 
+
+  //     // Update the isAuthenticated state variable
+  //     setIsAuthenticated(true);
+
+  //     // Redirect the user to the UserProfilePage
+  //     navigate('/profile');
+  //   } catch (error) {
+  //     // Handle error
+  //     if (error.response) {
+  //       console.error(error.response.data);
+  //     } else {
+  //       console.error(error.message);
+  //     }
+  //   }
+  // };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     try {
       // Make a POST request to the login endpoint of the auth-service
       const response = await axios.post('http://localhost:5000/api/login', {
         username,
         password
       });
-
-      // Handle the response and any necessary actions
-      console.log(response.data); // You can display a success message or redirect to another page
-
+  
+      // Get Response
+      console.log(response.data);
+  
       // Update the isAuthenticated state variable
       setIsAuthenticated(true);
-
+  
       // Redirect the user to the UserProfilePage
       navigate('/profile');
     } catch (error) {
       // Handle error
       if (error.response) {
-        console.error(error.response.data); // You can display an error message
+        console.error(error.response.data);
       } else {
         console.error(error.message);
       }
     }
   };
-
+  
   return (
     <Container>
       <Row className='d-flex justify-content-center align-items-center h-100 my-5'>

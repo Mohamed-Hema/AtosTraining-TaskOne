@@ -1,4 +1,3 @@
-const axios = require('axios');
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -8,7 +7,6 @@ const authMiddleware = async (req, res, next) => {
     }
 
     // Verify token by calling the auth-service endpoint
-    const response = await axios.post(`${process.env.VERIFY_TOKEN_AUTH_SERVICE}`, { token });
 
     // Check if verification failed
     if (response.status !== 200 || !response.data.user) {
@@ -27,7 +25,7 @@ const authMiddleware = async (req, res, next) => {
 
 // Checking if user is TEACHER
 const isTeacher = (req, res, next) => {
-  if (req.user && req.user.userType === 'TEACHER') {
+  if (req.user.userType != 'TEACHER') {
     next();
   } else {
     res.status(403).json({ error: 'Unauthorized' });

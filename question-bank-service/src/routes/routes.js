@@ -8,35 +8,34 @@ const {
   isNotStudent
 } = require('../middlewares/authMiddleware');
 const {
-  createQuestion,
   getQuestionById,
+  createQuestion,
   getAllQuestions,
   updateQuestion,
-  addAnswer,
-  deleteAnswer,
-  deleteQuestion
+  addAnswerToQuestion,
+  deleteAnswerFromQuestion,
+  deleteQuestion,
 } = require('../controllers/controllers');
 
+// Create and Save question
+router.post("/questions", createQuestion);
+
+// Get Question by ID
+router.get("/questions/:id", getQuestionById);
+
 // Get all questions
-router.get('/questions', authMiddleware, getAllQuestions);
+router.get("/questions", getAllQuestions);
 
-// Create new question
-router.post('/questions', authMiddleware, isTeacher, createQuestion);
+// Update a question
+router.put("/questions/:id", updateQuestion);
 
+// Add answer to a question
+router.post("/questions/:id/answers", addAnswerToQuestion);
 
-// Get question by ID
-router.get('/questions/:questionId', getQuestionById);
+// Delete an answer from a question
+router.delete("/questions/:id/answers/:answerId", deleteAnswerFromQuestion);
 
-// Update question
-router.put('/questions/:questionId', authMiddleware, isTeacher, updateQuestion);
-
-// Add answer for existing question
-router.post('/questions/:questionId/answers', authMiddleware, isTeacher, addAnswer);
-
-// Delete answer for existing question
-router.delete('/questions/:questionId/answers/:answerId', authMiddleware, isTeacher, deleteAnswer);
-
-// Delete question
-router.delete('/questions/:questionId', authMiddleware, isAdmin, deleteQuestion);
+// Delete a question
+router.delete("/questions/:id", deleteQuestion);
 
 module.exports = router;

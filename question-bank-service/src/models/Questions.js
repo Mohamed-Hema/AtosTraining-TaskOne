@@ -1,62 +1,75 @@
-// Adding Mongoose
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-////Creating Questions Schema
-const QuestionsSchema = new mongoose.Schema({
+// Define the schema for the answers
+const answerSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  }
+});
+
+// Create the Answer model based on the answer schema
+const Answer = mongoose.model("Answer", answerSchema);
+
+// Define the schema for the questions
+const questionSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true
   },
   category: {
     type: String,
-    unique: true,
     required: true
   },
   subcategory: {
-    type: String
+    type: String,
+    required: true
   },
   mark: {
     type: Number,
-    unique: true,
     required: true
   },
   expectedTime: {
-    type: Number
+    type: Number,
+    required: true
   },
   correctAnswers: {
-    type: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Answer'
-      }
-    ],
+    type: [String],
     required: true
   },
   createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    type: String,
+    required: true
   },
   created_at: {
     type: Date,
     default: Date.now
   },
   answers: {
-    type: [
-      { 
-        id: {
-          type: Number
-        },
-        name: {
-          type: String
-        },
-        description: {
-          type: String
-        }
-      }
-    ],
+    type: [answerSchema],
     required: true
   }
 });
 
-const Questions = mongoose.model('Question', QuestionsSchema);
-module.exports = Questions;
+// Create the Question model based on the question schema
+const Questions = mongoose.model("Question", questionSchema);
+
+// Export the models
+module.exports = {
+  Questions,
+  Answer
+};
+
+

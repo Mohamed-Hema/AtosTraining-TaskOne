@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import QuestionBankPage from './pages/QuestionBankPage';
@@ -14,6 +14,10 @@ const App = () => {
     <Router>
       <Navbar isAuthenticated={isAuthenticated} />
       <Routes>
+        <Route
+          path="/"
+          element={<Navigate to="/signup" replace />}
+        />
         <Route
           path="/login"
           element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}

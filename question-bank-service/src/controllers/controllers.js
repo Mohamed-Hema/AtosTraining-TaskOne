@@ -1,6 +1,6 @@
 // Importing Question Structure form DB
-const { Question } = require('../models/Questions');
-const { isTeacher, isAdmin, isNotStudent } = require('../middlewares/authMiddleware');
+const { Question, Questions } = require('../models/Questions');
+
 
 // Handling Errors
 function handleError(res, error) {
@@ -10,235 +10,172 @@ function handleError(res, error) {
   });
 }
 
-
-// Create new question
-exports.createQuestion = async (req, res) => {
+// API: Create and Save question
+exports.createQuestion = async function (req, res) {
   try {
-    // Getting question data from the request body
-    const { name, category, subcategory, mark, expectedTime, correctAnswers, answers } = req.body;
-
-    // Create a new question
-    const question = new Question({
+    const {
+      id,
       name,
       category,
       subcategory,
       mark,
       expectedTime,
       correctAnswers,
+      createdBy,
       answers,
-      createdBy: req.user.userId
+    } = req.body;
+
+    const question = new Questions({
+      id,
+      name,
+      category,
+      subcategory,
+      mark,
+      expectedTime,
+      correctAnswers,
+      createdBy,
+      answers,
     });
 
-    // Save the question to the database
-    await question.save();
+    const savedQuestion = await question.save();
 
-    // Return the success response
-    res.status(201).json({
-      message: 'Question created successfully.',
-      question
-    });
+    res.status(201).json(savedQuestion);
   } catch (error) {
-    handleError(res, error);
-  }  
-};
-
-// Get question by ID
-exports.getQuestionById = async (req, res) => {
-  try {
-    const {questionId} = req.params;
-    // Finding Question
-    const question = await Question.findById(questionId);
-    if(!question) {
-      return res.status(404).json({
-        message: "Question not found!"
-      })
-    } 
-    
-    //Return Results
-    res.json({question});
-    //Catching Errors
-  }catch(error) {
-    handleError(res, error);
-  }
-};
-
-// Geting All Questions
-exports.getAllQuestions = async (req, res) => {
-  try {
-    const {page = 1, limit = 10, category, createdBy} = req.query;
-
-    //Filter
-    const filter = {};
-    if(category) {
-      filter.category = category;
-    }
-    if(createdBy) {
-      filter.createdBy = createdBy;
-    }
-
-    // Skipping Value according to page limit
-    const skip = (page - 1) * limit;
-
-    // Getting Questions after Filtering and Pagination
-    const questions = await Question.find(filter).skip(skip).limit(limit);
-
-    // Return Results
-    res.json({questions});
-
-    // Catching Errors
-  } catch(error) {
-    handleError(error);
-  }
-};
-
-// Update question
-exports.updateQuestion = (req, res) => {
-  try {
-    // Get Question ID
-    const questionId = req.params.id;
-    // Getting Updated Question form body
-    const { name, category, subcategory, mark, expectedTime, correctAnswers, answers } = req.body;
-
-    // Checking if user is Teacher
-    isTeacher(req, res, () => {
-      // Find Question with ID nad Update it
-      Question.findByIdAndUpdate(
-        questionId,
-        { name, category, subcategory, mark, expectedTime, correctAnswers, answers },
-        // Update the Question
-        { new: true }
-      )
-        .then((question) => {
-
-          // Check if question is in DB or Not
-          if (!question) {
-            return res.status(404).json({ message: 'Question not found' });
-          }
-          res.json({ message: 'Question updated successfully', question });
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    });
-
-  // Catching Errors
-  } catch (error) {
-    handleError(res, error);
+    console.error("Error: ", error);
+    res.status(500).json({ error: "An error occurred while creating the question." });
   }
 };
 
 
-// Add answer for existing question
-exports.addAnswer = async (req, res) => {
+// API: Get Question by ID
+exports.getQuestionById = async function (req, res) {
   try {
-    const { questionId } = req.params;
-    const { answer } = req.body;
+    const { id } = req.params;
 
-    // Check if the user is a teacher
-    if (!isTeacher(req.user)) {
-      return res.status(403).json({ message: 'Unauthorized to add answer' });
-    }
-
-    // Find the question by ID
-    const question = await Question.findById(questionId);
+    const question = await Questions.findById(id);
 
     if (!question) {
-      return res.status(404).json({ message: 'Question not found' });
+      return res.status(404).json({ error: "Question not found." });
     }
 
-    // Check if teacher is the same creator
-    if (question.createdBy !== req.user.userId) {
-      return res.status(403).json({ message: 'you are not authorized to add answers' });
+    res.status(200).json(question);
+  } catch (error) {
+    console.error("Error: ", error);
+    res.status(500).json({ error: "An error occurred while retrieving the question." });
+  }
+};
+
+// API: Get all questions
+exports.getAllQuestions = async function (req, res) {
+  try {
+    const questions = await Questions.find();
+
+    res.status(200).json(questions);
+  } catch (error) {
+    console.error("Error: ", error);
+    res.status(500).json({ error: "An error occurred while retrieving the questions." });
+  }
+};
+
+// API: Update a question
+exports.updateQuestion = async function (req, res) {
+  try {
+    const { id } = req.params;
+
+    const question = await Questions.findById(id);
+
+    if (!question) {
+      return res.status(404).json({ error: "Question not found." });
     }
 
-    // Add the answer to the question
-    question.answers.push(answer);
+    question.name = req.body.name;
+    question.category = req.body.category;
+    question.subcategory = req.body.subcategory;
+    question.mark = req.body.mark;
+    question.expectedTime = req.body.expectedTime;
+    question.correctAnswers = req.body.correctAnswers;
+    question.createdBy = req.body.createdBy;
+    question.answers = req.body.answers;
 
     const updatedQuestion = await question.save();
 
-    res.json({ message: 'Answer was added successfully', question: updatedQuestion });
-
-    // Catching errors
+    res.status(200).json(updatedQuestion);
   } catch (error) {
-    handleError(res, error);
+    console.error("Error: ", error);
+    res.status(500).json({ error: "An error occurred while updating the question." });
   }
 };
 
-
-// Delete answer for existing question
-exports.deleteAnswer = async (req, res) => {
+// API: Add answer to a question
+exports.addAnswerToQuestion = async function (req, res) {
   try {
-    const { questionId, answerId } = req.params;
+    const { id } = req.params;
 
-    // Check if the user is a teacher
-    isTeacher(req, res, async () => {
-      try {
-          // Find the question by ID
-          const question = await Question.findById(questionId);
+    const question = await Questions.findById(id);
 
-        if (!question) {
-          return res.status(404).json({ message: 'Question is not found' });
-        }
+    if (!question) {
+      return res.status(404).json({ error: "Question not found." });
+    }
 
-    // Check if teacher is the same creator
-        if (question.createdBy !== req.user.userId) {
-              return res.status(403).json({ message: 'Unauthorized to delete answer' });
-          }
+    const newAnswer = {
+      id: req.body.id,
+      name: req.body.name,
+      description: req.body.description,
+    };
 
-        // Finding Answer in DB
-        const answerIndex = question.answers.findIndex((answer) => answer.id === answerId);
+    question.answers.push(newAnswer);
 
-        if (answerIndex === -1) {
-          return res.status(404).json({ message: 'Answer not found' });
-        }
+    const updatedQuestion = await question.save();
 
-        // Delete answer form DB
-        question.answers.splice(answerIndex, 1);
-
-        const updatedQuestion = await question.save();
-
-        res.json({ message: 'Answer is deleted successfully', question: updatedQuestion });
-      } catch (error) {
-        handleError(error);
-      }
-    });
-    // Catching errors
+    res.status(200).json(updatedQuestion);
   } catch (error) {
-    handleError(res, error);
+    console.error("Error: ", error);
+    res.status(500).json({ error: "An error occurred while adding the answer to the question." });
   }
 };
 
-
-// Delete question
-exports.deleteQuestion = async (req, res) => {
+// API: Delete answer from a question
+exports.deleteAnswerFromQuestion = async function (req, res) {
   try {
-    const { questionId } = req.params;
+    const { id, answerId } = req.params;
 
-    // Check if the user is a teacher
-    isTeacher(req, res, async () => {
-      try {
-          // Find the question by ID
-          const question = await Question.findById(questionId);
+    const question = await Questions.findById(id);
 
-        if (!question) {
-          return res.status(404).json({ message: 'Question not found' });
-        }
+    if (!question) {
+      return res.status(404).json({ error: "Question not found." });
+    }
 
-      // Check if teacher is the same creator
-        if (question.createdBy !== req.user.userId) {
-          return res.status(403).json({ message: 'Unauthorized to delete question' });
-        }
+    const answerIndex = question.answers.findIndex(answer => answer.id === answerId);
 
-        // Delete the question
-        await question.remove();
+    if (answerIndex === -1) {
+      return res.status(404).json({ error: "Answer not found." });
+    }
 
-        res.json({ message: 'Question deleted successfully' });
-      } catch (error) {
-        handleError(error);
-      }
-    });
-    // Catching errors
+    question.answers.splice(answerIndex, 1);
+
+    const updatedQuestion = await question.save();
+
+    res.status(200).json(updatedQuestion);
   } catch (error) {
-    handleError(res, error);
+    console.error("Error: ", error);
+    res.status(500).json({ error: "An error occurred while deleting the answer from the question." });
+  }
+};
+
+// API: Delete a question
+exports.deleteQuestion = async function (req, res) {
+  try {
+    const { id } = req.params;
+
+    const deletedQuestion = await Questions.findOneAndDelete({ id });
+
+    if (!deletedQuestion) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+
+    res.json({ message: "Question and associated answers deleted successfully" });
+  } catch (error) {
+    console.error("Error: ", error);
+    res.status(500).json({ error: "An error occurred while deleting the question" });
   }
 };
