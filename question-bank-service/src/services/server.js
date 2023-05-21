@@ -6,7 +6,12 @@ require('dotenv').config();
 const connectDB = require('./db');
 
 app.use(express.json());
-
+//MiddleWare
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+  next();
+});
 app.use('/api', questionsRouter);
 
 // Connecting to MongoDB

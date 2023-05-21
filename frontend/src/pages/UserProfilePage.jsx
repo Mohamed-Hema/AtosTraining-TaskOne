@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import UserProfile from '../components/UserProfile';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const UserProfilePage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

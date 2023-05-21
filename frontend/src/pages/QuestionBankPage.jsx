@@ -1,11 +1,10 @@
-import React from 'react';
 import QuestionBank from '../components/QuestionBank';
 
 const QuestionBankPage = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <div style={{ flex: 1 }}>
-        <QuestionBank /> {/* Add the QuestionBank component here */}
+        <QuestionBank />
       </div>
 
       <div className="mt-5">

@@ -1,12 +1,33 @@
 import  { useState } from 'react';
+import axios from 'axios';
 
 const AddQuestionForm = () => {
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
+  const [name, setName] = useState('');
+  const [category, setCategory] = useState('');
+  const [subcategory, setSubcategory] = useState('');
+  const [mark, setMark] = useState('');
+  const [expectedTime, setExpectedTime] = useState('');
+  const [correctAnswers, setCorrectAnswers] = useState('');
+  const [createdBy, setCreatedBy] = useState('');
+  const [answers, setAnswers] = useState('');
+ 
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+  const response = await axios.post('http://localhost:4000/questions', {
+  name,
+  category,
+  subcategory,
+  mark,
+  expectedTime,
+  correctAnswers,
+  createdBy,
+  answers,
+  });
+  console.log(response.data);
+  } catch (error) {
+  console.error(error);
+  }
   };
 
   return (

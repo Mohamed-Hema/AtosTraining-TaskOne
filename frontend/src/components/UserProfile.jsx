@@ -9,10 +9,10 @@ const UserProfile = ({ user }) => {
             <MDBCardBody>
               <h5 className='fw-bold mb-4'>User Profile</h5>
               <p>
-                <strong>UserName:</strong> {user.username}
+                <strong>Name:</strong> {user.username}
               </p>
               <p>
-                <strong>Job:</strong> {user.userType}
+                <strong>Email:</strong> {user.userType}
               </p>
               {/* Add more user data fields as needed */}
             </MDBCardBody>

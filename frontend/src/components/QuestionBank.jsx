@@ -1,14 +1,23 @@
-import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const QuestionBank = () => {
-  // Mock data for questions
-  const questions = [
-    { id: 1, question: 'What is the capital of France?' },
-    { id: 2, question: 'Who wrote the Harry Potter series?' },
-    { id: 3, question: 'What is the symbol for hydrogen?' },
-  ];
+  const [questions, setQuestions] = useState([]);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/questions');
+        setQuestions(response.data);
+      } catch (error) {
+        console.error('Error: ', error);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
 
   return (
     <div className="container">
@@ -37,7 +46,7 @@ const QuestionBank = () => {
           {questions.map((question) => (
             <tr key={question.id}>
               <th scope="row">{question.id}</th>
-              <td>{question.question}</td>
+              <td>{question.name}</td>
               <td>
                 <button className="btn btn-sm btn-outline-danger me-2">
                   <FontAwesomeIcon icon={faTrash} />
