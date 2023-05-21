@@ -28,7 +28,7 @@ const Navbar = ({ isAuthenticated }) => {
   };
 
   const handleLogout = () => {
-    // Handle logout logic
+    isAuthenticated === true
   };
 
   return (

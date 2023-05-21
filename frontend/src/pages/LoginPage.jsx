@@ -14,74 +14,26 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-
-  //   try {
-  //     // Make a POST request to the login endpoint of the auth-service
-  //     // const response = await axios.post('http://localhost:5000/api/login', {
-  //     //   username,
-  //     //   password
-  //     // });
-  //     try {
-  //       const response = await axios.post('http://localhost:5000/api/login', {
-  //         username,
-  //         password
-  //       });
-  //       console.log(response.data); 
-
-  //       // handle response here
-  //     } catch (error) {
-  //       // handle error here
-  //       console.error(error);
-  //     }
-      
-
-  //     // Get Response
-  //     // console.log(response.data); 
-
-  //     // Update the isAuthenticated state variable
-  //     setIsAuthenticated(true);
-
-  //     // Redirect the user to the UserProfilePage
-  //     navigate('/profile');
-  //   } catch (error) {
-  //     // Handle error
-  //     if (error.response) {
-  //       console.error(error.response.data);
-  //     } else {
-  //       console.error(error.message);
-  //     }
-  //   }
-  // };
-
-  const handleSubmit = async (event) => {
+  async function onSubmit() {
     event.preventDefault();
-  
     try {
-      // Make a POST request to the login endpoint of the auth-service
       const response = await axios.post('http://localhost:5000/api/login', {
         username,
         password
       });
-  
-      // Get Response
-      console.log(response.data);
-  
-      // Update the isAuthenticated state variable
+
+      //Convert User to be logged in
       setIsAuthenticated(true);
-  
+
       // Redirect the user to the UserProfilePage
       navigate('/profile');
+
+      console.log(response.data);
     } catch (error) {
-      // Handle error
-      if (error.response) {
-        console.error(error.response.data);
-      } else {
-        console.error(error.message);
-      }
+      console.log(error);
     }
-  };
+  }
+  
   
   return (
     <Container>
@@ -130,7 +82,7 @@ const LoginPage = () => {
                 className='mx-2 px-5 text-white-50'
                 color='white'
                 size='lg'
-                onClick={handleSubmit}
+                onClick={onSubmit}
               >
                 Login
               </MDBBtn>
