@@ -6,6 +6,7 @@ import QuestionBankPage from './pages/QuestionBankPage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import UserProfilePage from './pages/UserProfilePage';
+import CreateAdminPage from './pages/CreateAdminPage';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,6 +23,9 @@ const App = () => {
           path="/login"
           element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}
         />
+
+
+
         <Route path="/signup" element={<SignupPage />} />
         <Route
           path="/questionbank"
@@ -31,6 +35,7 @@ const App = () => {
           path="/profile"
           element={<UserProfilePage isAuthenticated={isAuthenticated} />}
         />
+        <Route path="/create-admin" element={<CreateAdminPage />} />
       </Routes>
       <Footer />
     </Router>

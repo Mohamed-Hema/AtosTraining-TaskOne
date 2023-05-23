@@ -36,10 +36,7 @@ const questionSchema = new mongoose.Schema({
     required: true
   },
   mark: {
-    type: Number,
-    unique:false,
-    required: false,
-    
+    type: Number
   },
   expectedTime: {
     type: Number,

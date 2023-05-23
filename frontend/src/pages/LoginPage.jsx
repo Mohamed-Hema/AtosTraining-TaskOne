@@ -1,98 +1,23 @@
-import { useState } from 'react';
 import { Container, Row, Col } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { MDBCard, MDBCardBody, MDBInput, MDBBtn } from 'mdb-react-ui-kit';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { MDBCard, MDBCardBody } from 'mdb-react-ui-kit';
+import PropTypes from 'prop-types';
+import LoginForm from '../components/LoginForm';
 
-
-const LoginPage = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('');
-
-  const navigate = useNavigate();
-
-  async function onSubmit(event) {
-    event.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/api/login', {
-        username,
-        password
-      });
-  
-      // Convert User to be logged in
-      setIsAuthenticated(true);
-  
-      // Get the userType from response.data and set it in state
-      const { userType } = response.data;
-      setUserType(userType);
-  
-      // Redirect the user to the UserProfilePage
-      navigate('/profile', { state: { username, userType } });
-  
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  
-  
+const LoginPage = ({ setIsAuthenticated }) => {
   return (
-    <Container>
-      <Row className='d-flex justify-content-center align-items-center h-100 my-5'>
-        <Col col='12'>
+    <Container className='d-flex justify-content-center align-items-center h-100'>
+      <Row>
+        <Col>
           <MDBCard
-            className='bg-dark text-white my-5 mx-auto'
+            className='bg-dark text-white my-5'
             style={{ borderRadius: '1rem', maxWidth: '400px' }}
           >
-            <MDBCardBody className='p-5 d-flex flex-column align-items-center mx-auto w-100'>
-              <h2 className='fw-bold mb-2 text-uppercase'>Login</h2>
-              <p className='text-white-50 mb-5'>Please enter your login and password!</p>
+            <MDBCardBody className='p-5'>
+              <h2 className='fw-bold mb-2 text-uppercase text-center'>Login</h2>
 
-             
-              <MDBInput
-                wrapperClass='mb-4 mx-5 w-100'
-                labelClass='text-white'
-                label='Username'
-                id='formControlLg'
-                type='text'
-                size='lg'
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <MDBInput
-                wrapperClass='mb-4 mx-5 w-100'
-                labelClass='text-white'
-                label='Password'
-                id='formControlLg'
-                type='password'
-                size='lg'
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <LoginForm setIsAuthenticated={setIsAuthenticated} />
 
-              <p className='small mb-3 pb-lg-2'>
-                <a className='text-white-50' href='#!'>
-                  Forgot password?
-                </a>
-              </p>
-
-              <MDBBtn
-                outline
-                className='mx-2 px-5 text-white-50'
-                color='white'
-                size='lg'
-                onClick={onSubmit}
-              >
-                Login
-              </MDBBtn>
-
-              <div>
+              <div className='text-center'>
                 <p className='mb-0'>
                   Don&apos;t have an account?{' '}
                   <a href='/signup' className='text-white-50 fw-bold'>
@@ -106,6 +31,10 @@ const LoginPage = () => {
       </Row>
     </Container>
   );
+};
+
+LoginPage.propTypes = {
+  setIsAuthenticated: PropTypes.func.isRequired,
 };
 
 export default LoginPage;

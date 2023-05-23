@@ -1,46 +1,85 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { login } from "../api/authApi";
+import React, { useState } from 'react';
+import { MDBInput, MDBBtn } from 'mdb-react-ui-kit';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const LoginForm = () => {
+const LoginForm = ({ setIsAuthenticated }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // Check if the user is already logged in
-  //   const userData = localStorage.getItem("userData");
-  //   if (userData) {
-  //     // User is already logged in
-  //     // Redirect to UserProfilePage
-  //     const { username, userType } = JSON.parse(userData);
-  //     navigate("/profile", { state: { username, userType } });
-  //   }
-  // }, []);
+  const onSubmit = async (event) => {
+    event.preventDefault();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+    if (!username || !password) {
+      setErrorMessage('Please enter both username and password.');
+      return;
+    }
 
     try {
-      const data = await login();
+      const response = await axios.post('http://localhost:5000/api/login', {
+        username,
+        password
+      });
 
-      // Authentication successful
-      // Save the username and userType in localStorage
-      localStorage.setItem(
-        "userData",
-        JSON.stringify({ username: '', userType: data.userType })
-      );
+      console.log(response.data);
+      setIsAuthenticated(true);
 
-      // Redirect to UserProfilePage
-      navigate("/profile", { state: { username: '', userType: data.userType } });
+      // Redirect the user based on userType
+      if (response.data.userType === 'TEACHER') {
+        navigate('/questionbank');
+      } else {
+        navigate('/profile', { state: { username, userType: response.data.userType } });
+      }
     } catch (error) {
-      // Handle login error
-      console.error(error);
+      console.log(error);
+      setErrorMessage('User Credentials aren\'t found or don\'t match');
     }
   };
 
   return (
-    <div className="form">
-      <form onSubmit={handleLogin}>{/* Rest of your code */}</form>
-    </div>
+    <form className="d-flex flex-column align-items-center">
+      <MDBInput
+        wrapperClass='mb-4 w-100'
+        labelClass='text-white'
+        label='Username'
+        id='formControlLg'
+        type='text'
+        size='lg'
+        placeholder='Enter Username'
+        required
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <MDBInput
+        wrapperClass='mb-4 w-100'
+        labelClass='text-white'
+        label='Password'
+        id='formControlLg'
+        type='password'
+        size='lg'
+        placeholder='Enter Password'
+        required
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <MDBBtn
+        outline
+        className='mx-2 px-5 text-white-50'
+        color='white'
+        size='lg'
+        onClick={onSubmit}
+        disabled={!username || !password} // Disable the button if username or password is not entered
+      >
+        Login
+      </MDBBtn>
+
+      {errorMessage && (
+        <p style={{ color: 'red' }}>{errorMessage}</p>
+      )}
+    </form>
   );
 };
 

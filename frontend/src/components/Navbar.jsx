@@ -1,19 +1,21 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ isAuthenticated }) => {
-  const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
-
   const renderAuthButtons = () => {
     if (isAuthenticated) {
       return (
-        <button className="btn btn-outline-light" onClick={handleLogout}>
-          Logout
-        </button>
+        <>
+          <Link to="/create-admin" className="btn btn-primary me-2">
+            Create Admin
+          </Link>
+          <button className="btn btn-outline-light" onClick={handleLogout}>
+            Logout
+          </button>
+        </>
       );
-    } else if (!isLoginPage) {
+    } else {
       return (
         <>
           <Link to="/login" className="btn btn-outline-light me-2">
@@ -27,8 +29,14 @@ const Navbar = ({ isAuthenticated }) => {
     }
   };
 
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    isAuthenticated === true
+    // Navigate to the login page
+    navigate('/login');
+
+    // Refresh the page
+    window.location.reload();
   };
 
   return (
@@ -45,6 +53,10 @@ const Navbar = ({ isAuthenticated }) => {
       </div>
     </nav>
   );
+};
+
+Navbar.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
 };
 
 export default Navbar;

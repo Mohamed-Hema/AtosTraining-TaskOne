@@ -4,9 +4,12 @@ const axios = require('axios');
 const questionsRouter = require('../routes/routes');
 require('dotenv').config();
 const connectDB = require('./db');
+const cors = require('cors')
 
 app.use(express.json());
 //MiddleWare
+
+app.use(cors());
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', '*');

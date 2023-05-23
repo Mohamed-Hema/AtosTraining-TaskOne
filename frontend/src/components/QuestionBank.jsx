@@ -1,9 +1,8 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faEdit } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import AddQuestionForm from './AddQuestionForm';
-import DeleteQuestionForm from '../components/deleteQuestionForm';
+import DeleteQuestionForm from '../components/DeleteQuestionForm';
+import EditQuestionForm from './EditQuestionForm';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const QuestionBank = () => {
@@ -22,23 +21,16 @@ const QuestionBank = () => {
     fetchQuestions();
   }, []);
 
-  const onDeleteQuestion = async (questionId) => {
+  const handleDeleteQuestion = async (questionId) => {
     try {
-    await axios.delete(`http://localhost:4000/api/questions/${questionId}`)
-    .then(response => {
-    console.log(response);
-    })
-    .catch(error => {
-    console.error('Error: ', error);
-    });
-    setQuestions((prevQuestions) =>
-    prevQuestions.filter((question) => question.id !== questionId)
-    );
+      await axios.delete(`http://localhost:4000/api/questions/${questionId}`);
+      setQuestions((prevQuestions) =>
+        prevQuestions.filter((question) => question._id !== questionId)
+      );
     } catch (error) {
-    console.error('Error: ', error);
+      console.error('Error: ', error);
     }
-    };
-   
+  };
 
   return (
     <div className="container">
@@ -59,7 +51,7 @@ const QuestionBank = () => {
             <th scope="col">Update</th>
           </tr>
         </thead>
-          <tbody>
+        <tbody>
           {questions.map((question) => (
             <tr key={question._id}>
               <td>{question.name}</td>
@@ -68,14 +60,12 @@ const QuestionBank = () => {
               <td>{question.mark}</td>
               <td>
                 <DeleteQuestionForm
-                  questionId={question._id} // Pass the MongoDB-generated ID
-                  onDeleteQuestion={onDeleteQuestion}
+                  question={question}
+                  onDeleteQuestion={handleDeleteQuestion}
                 />
               </td>
               <td>
-                <button className="btn btn-sm btn-outline-primary">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
+                <EditQuestionForm questionId={question._id} />
               </td>
             </tr>
           ))}

@@ -18,7 +18,6 @@ const UserProfile = () => {
               <p>
                 <strong>Job:</strong> {userType}
               </p>
-              {/* Add more user data fields as needed */}
             </MDBCardBody>
           </MDBCard>
         </MDBCol>

@@ -17,8 +17,10 @@ const {
   deleteQuestion,
 } = require('../controllers/controllers');
 
+
+
 // Create and Save question
-router.post("/questions", createQuestion);
+router.post("/questions", , createQuestion);
 
 // Get Question by ID
 router.get("/questions/:id", getQuestionById);

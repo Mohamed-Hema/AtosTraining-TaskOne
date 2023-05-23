@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import axios from 'axios';
 import { Container, Row, Col } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,12 +11,18 @@ const SignupPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userType, setUserType] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const onSubmit = async (event) => {
     event.preventDefault();
 
+    if (!userType || !username || !password || !confirmPassword) {
+      setErrorMessage('Please fill in all required fields.');
+      return;
+    }
+
     if (password !== confirmPassword) {
-      console.error('Passwords do not match');
+      setErrorMessage('Passwords do not match.');
       return;
     }
 
@@ -27,7 +33,7 @@ const SignupPage = () => {
         confirmPassword,
         userType,
       });
-    
+
       // Handle successful response
       console.log(response.data);
       navigate('/profile');
@@ -35,11 +41,11 @@ const SignupPage = () => {
       // Handle error response
       if (error.response && error.response.data) {
         console.log(error.response.data);
+        setErrorMessage('Username is already registered. Kindly login.');
       } else {
         console.log('An error occurred during signup');
       }
     }
-    
   };
 
   return (
@@ -54,7 +60,12 @@ const SignupPage = () => {
                 <label className='text-white' htmlFor='userType'>
                   Choose User
                 </label>
-                <select className='form-select form-select-lg' id='userType' required onChange={(e) => setUserType(e.target.value)}>
+                <select
+                  className='form-select form-select-lg'
+                  id='userType'
+                  required
+                  onChange={(e) => setUserType(e.target.value)}
+                >
                   <option value=''>Select user type</option>
                   <option value='TEACHER'>Teacher</option>
                   <option value='STUDENT'>Student</option>
@@ -69,6 +80,7 @@ const SignupPage = () => {
                 size='lg'
                 required
                 value={username}
+                placeholder='Choose a Username'
                 onChange={(e) => setUsername(e.target.value)}
               />
 
@@ -80,6 +92,7 @@ const SignupPage = () => {
                 type='password'
                 size='lg'
                 required
+                placeholder='Enter Password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -93,8 +106,11 @@ const SignupPage = () => {
                 size='lg'
                 required
                 value={confirmPassword}
+                placeholder='Confirm Password'
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
+
+              {errorMessage && <p className='text-danger'>{errorMessage}</p>}
 
               <MDBBtn outline className='mx-2 px-5 text-white-50' color='white' size='lg' onClick={onSubmit}>
                 Sign Up

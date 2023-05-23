@@ -1,10 +1,13 @@
-import { useState } from "react";
+import  { useState } from "react";
 import QuestionBank from "../components/QuestionBank";
+import GetQuestionById from "../components/GetQuestionById";
+
 
 const QuestionBankPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages] = useState(3); // Set the total number of pages here
-
+  const[questionId, setQuestionId] = useState("");
+  
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
@@ -18,6 +21,7 @@ const QuestionBankPage = () => {
       <div style={{ flex: 1 }}>
         <QuestionBank />
       </div>
+      <GetQuestionById questionId={questionId} />
 
       {/* Pagination */}
       <nav aria-label="Page navigation example">

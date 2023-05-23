@@ -1,27 +1,28 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal, Button } from 'react-bootstrap';
 
-
-const DeleteQuestionForm = ({ questionId, onDeleteQuestion }) => {
+const DeleteQuestionForm = ({ question, onDeleteQuestion }) => {
   const [showModal, setShowModal] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:4000/api/questions/${questionId}`);
-      onDeleteQuestion(questionId);
+      const response = await fetch(`http://localhost:4000/api/questions/${question._id}`, {
+        method: 'DELETE'
+      });
+      onDeleteQuestion(question._id);
       setShowModal(false);
-      console.log(response.data)
+      console.log(question._id)
+
+      console.log(response)
     } catch (error) {
       console.log(error);
     }
   };
-  
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
@@ -62,7 +63,7 @@ const DeleteQuestionForm = ({ questionId, onDeleteQuestion }) => {
 };
 
 DeleteQuestionForm.propTypes = {
-  questionId: PropTypes.string.isRequired,
+  question: PropTypes.object.isRequired,
   onDeleteQuestion: PropTypes.func.isRequired,
 };
 

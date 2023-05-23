@@ -94,7 +94,6 @@ exports.updateQuestion = async function (req, res) {
     question.mark = req.body.mark;
     question.expectedTime = req.body.expectedTime;
     question.correctAnswers = req.body.correctAnswers;
-    question.createdBy = req.body.createdBy;
     question.answers = req.body.answers;
 
     const updatedQuestion = await question.save();
@@ -168,7 +167,7 @@ exports.deleteQuestion = async function (req, res) {
   try {
     const { id } = req.params;
 
-    const deletedQuestion = await Questions.findByIdAndDelete(id).lean(); // Add the .lean() method
+    const deletedQuestion = await Questions.findByIdAndDelete(id)
     console.log(deletedQuestion)
 
     if (!deletedQuestion) {

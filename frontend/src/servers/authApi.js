@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://localhost:5000/api/";
 
 export const login = async (username, password) => {
   try {
@@ -28,4 +28,3 @@ export const signUp = async (username, password, confirmPassword, userType) => {
   }
 };
 
-// auth.js

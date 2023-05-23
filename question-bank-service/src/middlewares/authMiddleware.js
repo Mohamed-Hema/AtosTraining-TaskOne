@@ -6,7 +6,7 @@ const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    // Verify token by calling the auth-service endpoint
+   const response = await axios.get('http://localhost:5000/api/auth/verify', { headers: { Authorization: `Bearer ${token}` } });
 
     // Check if verification failed
     if (response.status !== 200 || !response.data.user) {
@@ -23,14 +23,16 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
+
 // Checking if user is TEACHER
 const isTeacher = (req, res, next) => {
-  if (req.user.userType != 'TEACHER') {
+  if (req.user.userType === 'TEACHER') {
     next();
   } else {
     res.status(403).json({ error: 'Unauthorized' });
   }
 };
+
 
 // Checking if user is ADMIN
 const isAdmin = (req, res, next) => {
