@@ -4,30 +4,35 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { MDBCard, MDBCardBody, MDBInput, MDBBtn } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../servers/authApi';
 
 
 const LoginPage = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [userType, setUserType] = useState('');
+
   const navigate = useNavigate();
 
-  async function onSubmit() {
+  async function onSubmit(event) {
     event.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/login', {
         username,
         password
       });
-
-      //Convert User to be logged in
+  
+      // Convert User to be logged in
       setIsAuthenticated(true);
-
+  
+      // Get the userType from response.data and set it in state
+      const { userType } = response.data;
+      setUserType(userType);
+  
       // Redirect the user to the UserProfilePage
-      navigate('/profile');
-
+      navigate('/profile', { state: { username, userType } });
+  
       console.log(response.data);
     } catch (error) {
       console.log(error);

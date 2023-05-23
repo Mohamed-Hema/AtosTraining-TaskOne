@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -18,19 +18,14 @@ const SignupForm = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/signup', {
+      await axios.post('http://localhost:5000/api/signup', {
         username,
         password,
         confirmPassword,
         userType,
       });
 
-      console.log(response.data); // You can display a success message or redirect to another page
-
-      const { userType } = response.data;
-      if (userType === 'STUDENT') {
-        console.log('Welcome, student!');
-      }
+      console.log('Signup successful'); // You can display a success message or redirect to another page
 
       // Redirect the user to the login page
       navigate('/login');
@@ -46,52 +41,7 @@ const SignupForm = () => {
   return (
     <div className="form">
       <form onSubmit={handleSubmit}>
-        <div className="input-container">
-          <label>Username</label>
-          <input
-            type="text"
-            name="username"
-            required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div className="input-container">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="input-container">
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            required
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
-        <div className="input-container">
-          <label>Choose User</label>
-          <select
-            name="userType"
-            required
-            value={userType}
-            onChange={(e) => setUserType(e.target.value)}
-          >
-            <option value="">Select user type</option>
-            <option value="teacher">Teacher</option>
-            <option value="student">Student</option>
-          </select>
-        </div>
-        <div className="button-container">
-          <input type="submit" value="Sign Up" />
-        </div>
+        {/* Rest of your code */}
       </form>
     </div>
   );

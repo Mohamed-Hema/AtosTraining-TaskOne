@@ -8,7 +8,7 @@ import Footer from './components/Footer';
 import UserProfilePage from './pages/UserProfilePage';
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <Router>

@@ -1,7 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {faEdit } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import AddQuestionForm from './AddQuestionForm';
+import DeleteQuestionForm from '../components/deleteQuestionForm';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const QuestionBank = () => {
   const [questions, setQuestions] = useState([]);
@@ -19,38 +22,57 @@ const QuestionBank = () => {
     fetchQuestions();
   }, []);
 
+  const onDeleteQuestion = async (questionId) => {
+    try {
+    await axios.delete(`http://localhost:4000/api/questions/${questionId}`)
+    .then(response => {
+    console.log(response);
+    })
+    .catch(error => {
+    console.error('Error: ', error);
+    });
+    setQuestions((prevQuestions) =>
+    prevQuestions.filter((question) => question.id !== questionId)
+    );
+    } catch (error) {
+    console.error('Error: ', error);
+    }
+    };
+   
+
   return (
     <div className="container">
       <h1 className="mb-4">Question Bank</h1>
 
-      <div className="mb-4">
-        <button className="btn btn-primary me-3">
-          <FontAwesomeIcon icon={faPlus} className="me-2" />
-          Add Question
-        </button>
-        <button className="btn btn-secondary">
-          <FontAwesomeIcon icon={faEdit} className="me-2" />
-          Update Question
-        </button>
+      <div className="col-3 mb-4">
+        <AddQuestionForm />
       </div>
 
       <table className="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Question</th>
-            <th scope="col">Actions</th>
+            <th scope="col">Questions</th>
+            <th scope="col">Category</th>
+            <th scope="col">Subcategory</th>
+            <th scope="col">Marks</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Update</th>
           </tr>
         </thead>
-        <tbody>
+          <tbody>
           {questions.map((question) => (
-            <tr key={question.id}>
-              <th scope="row">{question.id}</th>
+            <tr key={question._id}>
               <td>{question.name}</td>
+              <td>{question.category}</td>
+              <td>{question.subcategory}</td>
+              <td>{question.mark}</td>
               <td>
-                <button className="btn btn-sm btn-outline-danger me-2">
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
+                <DeleteQuestionForm
+                  questionId={question._id} // Pass the MongoDB-generated ID
+                  onDeleteQuestion={onDeleteQuestion}
+                />
+              </td>
+              <td>
                 <button className="btn btn-sm btn-outline-primary">
                   <FontAwesomeIcon icon={faEdit} />
                 </button>

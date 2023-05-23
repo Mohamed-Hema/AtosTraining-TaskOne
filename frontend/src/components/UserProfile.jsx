@@ -1,6 +1,10 @@
 import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody } from 'mdb-react-ui-kit';
+import { useLocation } from 'react-router-dom';
 
-const UserProfile = ({ user }) => {
+const UserProfile = () => {
+  const location = useLocation();
+  const { username, userType } = location.state;
+
   return (
     <MDBContainer>
       <MDBRow className='justify-content-center'>
@@ -9,10 +13,10 @@ const UserProfile = ({ user }) => {
             <MDBCardBody>
               <h5 className='fw-bold mb-4'>User Profile</h5>
               <p>
-                <strong>Name:</strong> {user.username}
+                <strong>Name:</strong> {username}
               </p>
               <p>
-                <strong>Email:</strong> {user.userType}
+                <strong>Job:</strong> {userType}
               </p>
               {/* Add more user data fields as needed */}
             </MDBCardBody>

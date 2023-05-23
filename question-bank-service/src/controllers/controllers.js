@@ -1,6 +1,5 @@
 // Importing Question Structure form DB
-const { Question, Questions } = require('../models/Questions');
-
+const { Questions, Answer } = require('../models/Questions');
 
 // Handling Errors
 function handleError(res, error) {
@@ -10,11 +9,10 @@ function handleError(res, error) {
   });
 }
 
-// API: Create and Save question
+//Create and Save question
 exports.createQuestion = async function (req, res) {
   try {
     const {
-      id,
       name,
       category,
       subcategory,
@@ -26,7 +24,6 @@ exports.createQuestion = async function (req, res) {
     } = req.body;
 
     const question = new Questions({
-      id,
       name,
       category,
       subcategory,
@@ -47,7 +44,8 @@ exports.createQuestion = async function (req, res) {
 };
 
 
-// API: Get Question by ID
+
+//Get Question by ID
 exports.getQuestionById = async function (req, res) {
   try {
     const { id } = req.params;
@@ -65,7 +63,8 @@ exports.getQuestionById = async function (req, res) {
   }
 };
 
-// API: Get all questions
+
+//Get all questions
 exports.getAllQuestions = async function (req, res) {
   try {
     const questions = await Questions.find();
@@ -77,7 +76,8 @@ exports.getAllQuestions = async function (req, res) {
   }
 };
 
-// API: Update a question
+
+//Update a question
 exports.updateQuestion = async function (req, res) {
   try {
     const { id } = req.params;
@@ -106,7 +106,8 @@ exports.updateQuestion = async function (req, res) {
   }
 };
 
-// API: Add answer to a question
+
+// Add answer to a question
 exports.addAnswerToQuestion = async function (req, res) {
   try {
     const { id } = req.params;
@@ -118,7 +119,6 @@ exports.addAnswerToQuestion = async function (req, res) {
     }
 
     const newAnswer = {
-      id: req.body.id,
       name: req.body.name,
       description: req.body.description,
     };
@@ -134,7 +134,8 @@ exports.addAnswerToQuestion = async function (req, res) {
   }
 };
 
-// API: Delete answer from a question
+
+// Delete answer from a question
 exports.deleteAnswerFromQuestion = async function (req, res) {
   try {
     const { id, answerId } = req.params;
@@ -162,12 +163,13 @@ exports.deleteAnswerFromQuestion = async function (req, res) {
   }
 };
 
-// API: Delete a question
+// Delete a question
 exports.deleteQuestion = async function (req, res) {
   try {
     const { id } = req.params;
 
-    const deletedQuestion = await Questions.findOneAndDelete({ id });
+    const deletedQuestion = await Questions.findByIdAndDelete(id).lean(); // Add the .lean() method
+    console.log(deletedQuestion)
 
     if (!deletedQuestion) {
       return res.status(404).json({ error: "Question not found" });
@@ -179,3 +181,4 @@ exports.deleteQuestion = async function (req, res) {
     res.status(500).json({ error: "An error occurred while deleting the question" });
   }
 };
+

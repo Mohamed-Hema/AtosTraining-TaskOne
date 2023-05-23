@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 // Define the schema for the answers
 const answerSchema = new mongoose.Schema({
   id: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
   },
   name: {
     type: String,
@@ -22,8 +21,7 @@ const Answer = mongoose.model("Answer", answerSchema);
 // Define the schema for the questions
 const questionSchema = new mongoose.Schema({
   id: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
   },
   name: {
     type: String,
@@ -39,7 +37,9 @@ const questionSchema = new mongoose.Schema({
   },
   mark: {
     type: Number,
-    required: true
+    unique:false,
+    required: false,
+    
   },
   expectedTime: {
     type: Number,
