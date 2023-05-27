@@ -37,7 +37,7 @@ const App = () => {
         />
         <Route path="/create-admin" element={<CreateAdminPage />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </Router>
   );
 };

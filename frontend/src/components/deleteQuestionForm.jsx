@@ -4,6 +4,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal, Button } from 'react-bootstrap';
+import axios from "axios";
 
 const DeleteQuestionForm = ({ question, onDeleteQuestion }) => {
   const [showModal, setShowModal] = useState(false);
@@ -11,14 +12,9 @@ const DeleteQuestionForm = ({ question, onDeleteQuestion }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/questions/${question._id}`, {
-        method: 'DELETE'
-      });
+      await axios.delete(`http://localhost:4000/api/questions/${question._id}`);
       onDeleteQuestion(question._id);
       setShowModal(false);
-      console.log(question._id)
-
-      console.log(response)
     } catch (error) {
       console.log(error);
     }

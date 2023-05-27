@@ -3,7 +3,9 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Form, Modal, Row, Col } from 'react-bootstrap';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-const AddQuestionForm = () => {
+import PropTypes from 'prop-types';
+
+const AddQuestionForm = ({onQuestionAdded}) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [subcategory, setSubcategory] = useState("");
@@ -46,6 +48,7 @@ const AddQuestionForm = () => {
       setCreatedBy("");
       setAnswers([]);
       setShowModal(false);
+      onQuestionAdded();
     } catch (error) {
       console.error(error);
     }
@@ -188,5 +191,9 @@ const AddQuestionForm = () => {
     </div>
   );
 };
+
+AddQuestionForm.propTypes = {
+  onQuestionAdded: PropTypes.func.isRequired,
+ };
 
 export default AddQuestionForm;

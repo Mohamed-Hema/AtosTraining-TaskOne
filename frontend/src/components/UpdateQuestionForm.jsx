@@ -1,46 +1,57 @@
-import React, { useState, useEffect } from 'react';
 
-const UpdateQuestionForm = ({ questionId, initialQuestion, initialAnswer, onUpdate }) => {
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
+import { useState, useEffect } from 'react';
+import UpdateQuestionForm from './UpdateQuestionForm';
+import axios from 'axios';
+
+const ParentComponent = () => {
+  const [questionData, setQuestionData] = useState(null);
 
   useEffect(() => {
-    setQuestion(initialQuestion);
-    setAnswer(initialAnswer);
-  }, [initialQuestion, initialAnswer]);
+    fetchQuestionData();
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    onUpdate(questionId, question, answer);
+  const fetchQuestionData = async () => {
+    try {
+      const response = await axios.get('/api/questions');
+      setQuestionData(response.data);
+    } catch (error) {
+      console.error('Error:', error);
+      // Handle the error state or display an error message
+    }
+  };
+
+  const handleQuestionUpdate = (questionId, question, answer) => {
+    // Update the question data in the state
+    const updatedQuestionData = questionData.map((item) => {
+      if (item.id === questionId) {
+        return {
+          ...item,
+          question,
+          answer,
+        };
+      }
+      return item;
+    });
+    setQuestionData(updatedQuestionData);
   };
 
   return (
     <div>
-      <h2>Update Question</h2>
-      <form onSubmit={handleSubmit}>
+      {questionData && (
         <div>
-          <label htmlFor="question">Question:</label>
-          <input
-            type="text"
-            id="question"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-          />
+          {questionData.map((question) => (
+            <UpdateQuestionForm
+              key={question.id}
+              questionId={question.id}
+              initialQuestion={question.question}
+              initialAnswer={question.answer}
+              onUpdate={handleQuestionUpdate}
+            />
+          ))}
         </div>
-        <div>
-          <label htmlFor="answer">Answer:</label>
-          <input
-            type="text"
-            id="answer"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-          />
-        </div>
-        <button type="submit">Update</button>
-      </form>
+      )}
     </div>
   );
 };
 
-export default UpdateQuestionForm;
+export default ParentComponent;

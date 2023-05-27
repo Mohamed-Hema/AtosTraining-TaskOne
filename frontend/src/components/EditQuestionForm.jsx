@@ -3,8 +3,9 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Form, Modal, Row, Col } from 'react-bootstrap';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
 
-const EditQuestionForm = ({ questionId }) => {
+const EditQuestionForm = ({ questionId, onQuestionAdded }) => {
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
   const [subcategory, setSubcategory] = useState('');
@@ -57,6 +58,7 @@ const EditQuestionForm = ({ questionId }) => {
       });
       console.log(response.data);
       setShowModal(false);
+      onQuestionAdded();
     } catch (error) {
       console.error(error);
     }
@@ -66,7 +68,7 @@ const EditQuestionForm = ({ questionId }) => {
     <div className="container">
       <div className="row">
         <Button className="btn btn-primary me-2" onClick={handleShowModal}>
-          <FontAwesomeIcon icon={faEdit} className="me-2" />
+          <FontAwesomeIcon icon={faEdit} className="" />
         </Button>
 
         <Modal show={showModal} onHide={handleCloseModal}>
@@ -188,4 +190,8 @@ const EditQuestionForm = ({ questionId }) => {
   );
 };
 
+EditQuestionForm.propTypes = {
+  questionId: PropTypes.string.isRequired,
+  onQuestionAdded: PropTypes.func.isRequired,
+ };
 export default EditQuestionForm;
